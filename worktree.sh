@@ -51,7 +51,7 @@ _git_worktree_completions()
   fi
 
   # keep the suggestions in a local variable
-  local suggestions=($(compgen -W "$(git worktree list | awk '{print $3}' | tr -d '[' | tr -d ']')" -- "${COMP_WORDS[1]}"))
+  local suggestions=($(compgen -W "$(git branch --sort=committerdate)" -- "${COMP_WORDS[1]}"))
 
   if [ "${#suggestions[@]}" == "1" ]; then
     # if there's only one match, we remove the command literal
@@ -68,5 +68,5 @@ _git_worktree_completions()
 
 autoload bashcompinit
 bashcompinit
-complete -F _git_worktree_completions worktree_switch
+complete -F _git_worktree_completions worktree
 
