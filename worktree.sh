@@ -14,7 +14,7 @@ function worktree() {
     worktree_switch "$1"
 }
 
-function worktree_del() {
+function del_worktree() {
   if [ -d ./.git ]; then
     echo "Deleting worktree $WORKTREE_DIR/$1"
     if [ -d "$WORKTREE_DIR/$1" ]; then
@@ -69,4 +69,5 @@ _git_worktree_completions()
 autoload bashcompinit
 bashcompinit
 complete -F _git_worktree_completions worktree
+complete -F _git_worktree_completions del_worktree
 
