@@ -24,7 +24,7 @@ function del_worktree() {
     git worktree prune;
     echo 'Do you want to delete the branch too? (y/n)'
     read -r delete_branch
-    if [ "$delete_branch"=="y" ]; then
+    if [[ "$delete_branch" == "y" ]]; then
         echo "Deleting branch $1"
         git branch -D "$1";
     else
