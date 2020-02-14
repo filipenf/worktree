@@ -5,8 +5,7 @@ function worktree() {
     WTDIR="${WORKTREE_DIR}/$1"
     branch=$(git branch -a | grep -Eo -m 1 "$1$")
     if [ $? -eq 0 ]; then
-        worktree_switch "$branch" && return
-        git worktree add "$WTDIR" -B "$branch" ;
+        git worktree add "$WTDIR" "$branch" ;
     else
         echo "Creating new worktree $WTDIR from existing branch $branch"
         git worktree add -b "$1" "$WTDIR" master
@@ -56,7 +55,7 @@ _git_worktree_completions()
   if [ "${#suggestions[@]}" == "1" ]; then
     # if there's only one match, we remove the command literal
     # to proceed with the automatic completion of the worktree name
-	
+
     local exact_match=$(echo ${suggestions[0]/%\ */})
     COMPREPLY=("$exact_match")
   else
