@@ -5,7 +5,8 @@ function worktree() {
     WTDIR="${WORKTREE_DIR}/$1"
     branch=$(git branch -a | grep -Eo -m 1 "$1$")
     if [ $? -eq 0 ]; then
-        git worktree add "$WTDIR" "$branch" ;
+        git worktree list |grep -m 1 "\[$1\]$" || \
+          git worktree add "$WTDIR" "$branch" ;
     else
         echo "Creating new worktree $WTDIR from existing branch $branch"
         git worktree add -b "$1" "$WTDIR" master
