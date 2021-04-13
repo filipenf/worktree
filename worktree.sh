@@ -9,7 +9,7 @@ function worktree() {
           git worktree add "$WTDIR" "$branch" ;
     else
         echo "Creating new worktree $WTDIR from existing branch $branch"
-        git worktree add -b "$1" "$WTDIR" master
+        git worktree add -b "$1" "$WTDIR" origin/HEAD
     fi
     worktree_switch "$1"
 }
