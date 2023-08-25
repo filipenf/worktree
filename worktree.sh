@@ -15,22 +15,25 @@ function worktree() {
 }
 
 function del_worktree() {
-  if [ -d ./.git ]; then
-    echo "Deleting worktree $WORKTREE_DIR/$1"
-    if [ -d "$WORKTREE_DIR/$1" ]; then
-        echo "Removing directory $WORKTREE_DIR/$1"
-        rm -rf "$WORKTREE_DIR/$1";
-    fi
-    git worktree prune;
-    echo 'Do you want to delete the branch too? (y/n)'
-    read -r delete_branch
-    if [[ "$delete_branch" == "y" ]]; then
-        echo "Deleting branch $1"
-        git branch -D "$1";
-    else
-        echo "Branch not deleted, you can delete later with git branch -D $1";
-    fi
+  if [[ -z "$1" ]]; then
+    echo "Please specify the worktree name";
+    return;
+  fi
+  if [[ ! -d ./.git ]]; then
+    echo "Need to be in a git repository";
+    return
   fi;
+
+  for wt in $@; do
+    echo "Deleting worktree $WORKTREE_DIR/${wt}"
+    if [ -d "$WORKTREE_DIR/${wt}" ]; then
+        echo "Deleting directory directory $WORKTREE_DIR/${wt}"
+        rm -rf "$WORKTREE_DIR/${wt}";
+    fi
+    echo "Deleting branch ${wt}"
+    git worktree prune;
+    git branch -D "${wt}";
+  done;
 }
 
 function worktree_switch() {
@@ -66,8 +69,17 @@ _git_worktree_completions()
   fi
 }
 
+_git_del_worktree_completions() {
+  # keep the suggestions in a local variable
+  local suggestions=($(compgen -W "$(git worktree list | awk '{gsub(/\[|\]/, "", $3); print $3 }')" -- "${COMP_WORDS[1]}"))
+
+  COMPREPLY=("${suggestions[@]}")
+}
+
+
+
 autoload bashcompinit
 bashcompinit
 complete -F _git_worktree_completions worktree
-complete -F _git_worktree_completions del_worktree
+complete -F _git_del_worktree_completions del_worktree
 
